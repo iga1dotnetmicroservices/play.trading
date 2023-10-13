@@ -15,6 +15,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using Play.Common.HealthChecks;
 using Play.Common.Identity;
 using Play.Common.MassTransit;
 using Play.Common.MongoDB;
@@ -66,6 +67,9 @@ namespace Play.Trading.Service
             services.AddSingleton<IUserIdProvider, UserIdProvider>()
                     .AddSingleton<MessageHub>()
                     .AddSignalR();
+
+            services.AddHealthChecks()
+                    .AddMongo();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -97,6 +101,7 @@ namespace Play.Trading.Service
             {
                 endpoints.MapControllers();
                 endpoints.MapHub<MessageHub>("/messagehub");
+                endpoints.MapPlayEconomyHealthChecks();
             });
         }
 
