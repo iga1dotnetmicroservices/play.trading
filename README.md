@@ -3,7 +3,7 @@
 MacOS
 
 ```shell
-version='1.0.1'
+version='1.0.2'
 appname='iga1playeconomy'
 
 export GH_OWNER='iga1dotnetmicroservices'
@@ -14,7 +14,7 @@ docker build --secret id=GH_OWNER --secret id=GH_PAT -t "$appname.azurecr.io/pla
 Windows Shell
 
 ```powershell
-$version='1.0.1'
+$version='1.0.2'
 $appname='iga1playeconomy'
 
 $env:GH_OWNER='iga1dotnetmicroservices'
