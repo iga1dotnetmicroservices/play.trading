@@ -107,8 +107,30 @@ $IDENTITY_CLIENT_ID=az identity show -g $appname -n $namespace --query clientId 
 az keyvault set-policy -n $appname --secret-permissions get list --spn $IDENTITY_CLIENT_ID
 ```
 
-## Creating the Kubernetes resources
+## Install the Helm chart
+
+MacOS
+
+```shell
+helmUser=00000000-0000-0000-0000-000000000000
+helmPassword=$(az acr login --name $appname --expose-token --output tsv --query accessToken)
+
+export HELM_EXPERIMENTAL_OCI=1
+helm registry login "$appname.azurecr.io" --username $helmUser --password $helmPassword
+
+chartVersion="0.1.0"
+helm upgrade trading-service oci://$appname.azurecr.io/helm/microservice --version $chartVersion -f ./helm/values.yaml -n $namespace --install
+```
+
+Windows
 
 ```powershell
-kubectl apply -f ./kubernetes/trading.yaml -n $namespace
+$helmUser=00000000-0000-0000-0000-000000000000
+$helmPassword=az acr login --name $appname --expose-token --output tsv --query accessToken
+
+$env:HELM_EXPERIMENTAL_OCI=1
+helm registry login "$appname.azurecr.io" --username $helmUser --password $helmPassword
+
+chartVersion="0.1.0"
+helm upgrade trading-service oci://$appname.azurecr.io/helm/microservice --version $chartVersion -f .\helm\values.yaml -n $namespace --install
 ```

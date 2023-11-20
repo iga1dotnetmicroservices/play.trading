@@ -1,0 +1,20 @@
+microserviceName: "trading"
+
+image:
+  repository: iga1playeconomy.azurecr.io/play.trading
+  tag: 1.0.2
+
+envVariables:
+  ServiceSettings__Authority: https://iga1playeconomy.eastus.cloudapp.azure.com/identity-svc
+
+resources:
+  limits:
+    memory: "128Mi"
+    cpu: "150m"
+
+container:
+  port: 5006
+
+service:
+  type: ClusterIP
+  port: 80
