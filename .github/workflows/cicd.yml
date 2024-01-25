@@ -54,7 +54,7 @@ jobs:
         subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
     - name: Login to container registry
-      run: az acr login --name ${{ end.APP_NAME }}
+      run: az acr login --name ${{ env.APP_NAME }}
 
     - name: Build and push Docker images
       uses: docker/build-push-action@v5.1.0
