@@ -63,3 +63,4 @@ jobs:
           "GH_PAT=${{secrets.GH_PAT}}"
         # List of tags
         tags: ${{env.APP_NAME}}.azurecr.io/play.trading:${{ needs.generate-version.outputs.new_version }}
+        push: true
