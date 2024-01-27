@@ -70,6 +70,12 @@ namespace Play.Trading.Service
 
             services.AddHealthChecks()
                     .AddMongo();
+
+            services.AddLogging(loggingBuilder =>
+            {
+                var seqSettings = Configuration.GetSection(nameof(SeqSettings)).Get<SeqSettings>();
+                loggingBuilder.AddSeq(serverUrl: seqSettings.ServerUrl);
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
