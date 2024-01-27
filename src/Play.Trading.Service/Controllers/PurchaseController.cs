@@ -1,9 +1,11 @@
 using System;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using DnsClient.Internal;
 using MassTransit;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Play.Trading.Service.Contracts;
 using Play.Trading.Service.Dtos;
 using Play.Trading.Service.StateMachines;
@@ -17,11 +19,13 @@ namespace Play.Trading.Service.Controllers
     {
         private readonly IPublishEndpoint publishEndpoint;
         private readonly IRequestClient<GetPurchaseState> purchaseClient;
+        private readonly ILogger<PurchaseController> logger;
 
-        public PurchaseController(IPublishEndpoint publishEndpoint, IRequestClient<GetPurchaseState> purchaseClient)
+        public PurchaseController(IPublishEndpoint publishEndpoint, IRequestClient<GetPurchaseState> purchaseClient, ILogger<PurchaseController> logger)
         {
             this.publishEndpoint = publishEndpoint;
             this.purchaseClient = purchaseClient;
+            this.logger = logger;
         }
 
         [HttpGet("status/{idempotencyId}")]
@@ -49,6 +53,15 @@ namespace Play.Trading.Service.Controllers
         public async Task<IActionResult> PostAsync(SubmitPurchaseDto purchase)
         {
             var userId = User.FindFirstValue("sub");
+
+            logger.LogInformation(
+                "Received purchase request of {Quantity} of item {ItemId} from user {UserId} with CorrelationId {CorrelationId}",
+                purchase.Quantity,
+                purchase.ItemId,
+                userId,
+                purchase.IdempotencyId
+            );
+
             var correlationId = Guid.NewGuid();
 
             var message = new PurchaseRequested(
