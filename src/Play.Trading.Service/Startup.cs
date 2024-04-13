@@ -84,7 +84,14 @@ namespace Play.Trading.Service
                         )
                         .AddHttpClientInstrumentation()
                         .AddAspNetCoreInstrumentation()
-                        .AddConsoleExporter();
+                        .AddJaegerExporter(options =>
+                        {
+                            var jaegerSettings = Configuration.GetSection(nameof(JaegerSettings))
+                                                              .Get<JaegerSettings>();
+
+                            options.AgentHost = jaegerSettings.Host;
+                            options.AgentPort = jaegerSettings.Port;
+                        });
             });
         }
 
