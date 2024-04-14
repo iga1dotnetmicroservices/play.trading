@@ -74,16 +74,7 @@ namespace Play.Trading.Service
             services.AddSeqLogging(Configuration)
                     .AddTracing(Configuration);
 
-            services.AddOpenTelemetryMetrics(builder =>
-            {
-                var settings = Configuration.GetSection(nameof(ServiceSettings))
-                                            .Get<ServiceSettings>();
-
-                builder.AddMeter(settings.ServiceName)
-                       .AddHttpClientInstrumentation()
-                       .AddAspNetCoreInstrumentation()
-                       .AddPrometheusExporter();
-            });
+            services.AddMetrics(Configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
